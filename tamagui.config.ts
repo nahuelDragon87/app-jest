@@ -1,4 +1,4 @@
-import blazeColors, { rawColors } from "@/constants/Colors";
+import DefaultColors, { rawColors } from "@/constants/Colors";
 import shorthands from "@/constants/shorthands";
 import { createAnimations } from "@tamagui/animations-react-native";
 import { createInterFont } from "@tamagui/font-inter";
@@ -7,13 +7,13 @@ import { createFont, createTamagui, createTokens } from "tamagui";
 
 const headingFont = createInterFont();
 const bodyFont = createFont({
-  family: "blazeType_Regular",
+  family: "DefaultType_Regular",
   size: { 1: 12, 2: 14, 3: 15, 4: 16, true: 16 },
   weight: { 1: 400, 4: 500, 6: 700 },
   face: {
-    400: { normal: "blazeType_Regular" },
-    500: { normal: "blazeType_Medium" },
-    700: { normal: "blazeType_Bold" },
+    400: { normal: "DefaultType_Regular" },
+    500: { normal: "DefaultType_Medium" },
+    700: { normal: "DefaultType_Bold" },
   },
 });
 
@@ -21,7 +21,7 @@ const tokens = createTokens({
   size,
   space,
   zIndex,
-  color: { ...rawColors, ...blazeColors } as const,
+  color: { ...rawColors, ...DefaultColors } as const,
   radius,
 });
 

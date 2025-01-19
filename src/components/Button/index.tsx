@@ -1,4 +1,4 @@
-import blazeColors from "@/constants/Colors";
+import DefaultColors from "@/constants/Colors";
 import { useToggle } from "@/hooks";
 import { GetProps, Button as TamaguiButton, XStack } from "tamagui";
 import { Icon, IconProps } from "../Icon";
@@ -16,19 +16,19 @@ const getColor = (
 ) => {
   switch (type) {
     case "primary":
-      return blazeColors.background_white;
+      return DefaultColors.background_white;
     case "primaryInverted":
-      return disabled ? blazeColors.background_white : blazeColors.cta_primary;
+      return disabled ? DefaultColors.background_white : DefaultColors.cta_primary;
     case "secondary":
     case "mutted":
     case "text":
-      return disabled ? blazeColors.disabled : blazeColors.cta_primary;
+      return disabled ? DefaultColors.disabled : DefaultColors.cta_primary;
     case "secondaryInverted":
     case "muttedInverted":
     case "textInverted":
-      return disabled ? blazeColors.disabled : blazeColors.background_white;
+      return disabled ? DefaultColors.disabled : DefaultColors.background_white;
     default:
-      return blazeColors.cta_primary;
+      return DefaultColors.cta_primary;
   }
 };
 

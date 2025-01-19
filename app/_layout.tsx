@@ -23,7 +23,6 @@ export const unstable_settings = {
   initialRouteName: "index",
 };
 
-const storybookEnabled = process.env.EXPO_PUBLIC_STORYBOOK_ENABLED === "true";
 
 const queryClient = new QueryClient();
 
@@ -68,7 +67,7 @@ function RootLayoutNav() {
     <ThemeProvider value={customTheme}>
       <TamaguiProvider config={config}>
         <QueryClientProvider client={queryClient}>
-          <StatusBar style="light" />
+          <StatusBar style="dark" />
           <Slot />
         </QueryClientProvider>
       </TamaguiProvider>
@@ -77,17 +76,7 @@ function RootLayoutNav() {
 
   let EntryPoint = Index;
 
-  if (storybookEnabled) {
-    // if storybook is enabled, load it and replace the default root layout with the storybook UI
-    const StorybookUI = require("../.storybook").default;
-    EntryPoint = (
-      <TamaguiProvider config={config}>
-        <View flex={1}>
-          <StorybookUI />
-        </View>
-      </TamaguiProvider>
-    );
-  }
+  
 
   return EntryPoint;
 }

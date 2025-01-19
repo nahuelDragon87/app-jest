@@ -1,4 +1,4 @@
-import BlazeColors from "@/constants/Colors";
+import DefaultColors from "@/constants/Colors";
 import React, { FC, useMemo } from "react";
 import { IconProps } from "./Icon.types";
 import { Icons } from "./icons";
@@ -16,7 +16,7 @@ export const Icon: FC<IconProps> = ({
 
   return (
     <Component
-      color={color || BlazeColors.default_iconColor}
+      color={color || DefaultColors.default_iconColor}
       width={size}
       height={height || size}
       {...props}

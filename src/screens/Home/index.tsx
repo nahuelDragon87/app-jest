@@ -1,105 +1,82 @@
+import React, { useEffect, useState } from 'react';
+import { FlatList, SafeAreaView, RefreshControl, ActivityIndicator } from 'react-native';
+import axios from 'axios';
+import PostItem from '../../components/PostItem';
+import { View, Text, YStack } from 'tamagui';
 
-import React, { useState, useMemo } from "react";
-import { SafeAreaView, TextInput, Text, ActivityIndicator, FlatList, View, TouchableOpacity, Button } from "react-native";
-import { useGetData } from "../../services/example/hooks"; // Hook personalizado
-import { Repository } from "../../interfaces"; // Interfaces definidas
-import * as Linking from "expo-linking";
+const BlogScreen = () => {
+  const [posts, setPosts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
 
-const HomeScreen = ({ navigation }: { navigation: any }) => {
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [selectedItems, setSelectedItems] = useState<Repository[]>([]);
-  
-  // Hook para buscar repositorios
-  const { data, isLoading, isError } = useGetData(searchQuery);
+  useEffect(() => {
+    fetchPosts(page);
+  }, [page]);
 
-  // Total de estrellas acumuladas
-  const totalStars = useMemo(() => {
-    return (data || []).reduce((sum, repo) => sum + repo.stargazers_count, 0);
-  }, [data]);
+  const fetchPosts = async (page: number) => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `https://jsonplaceholder.typicode.com/posts?_page=${page}&_limit=10`
+      );
+      setPosts((prevPosts) => (page === 1 ? response.data : [...prevPosts, ...response.data]));
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    }
+    setLoading(false);
+  };
 
-  // Maneja la selección/deselección de elementos
-  const toggleSelectItem = (repo: Repository) => {
-    if (selectedItems.some((item) => item.id === repo.id)) {
-      setSelectedItems((prev) => prev.filter((item) => item.id !== repo.id));
-    } else {
-      setSelectedItems((prev) => [...prev, repo]);
+  const handleLoadMore = () => {
+    if (!loading) {
+      setPage(page + 1);
     }
   };
 
-  // Elimina los elementos seleccionados
-  const clearSelectedItems = () => {
-    setSelectedItems([]);
+  const renderFooter = () => {
+    return loading ? (
+      <ActivityIndicator size="large" color="#0000ff" style={{ marginVertical: 20 }} />
+    ) : null;
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, padding: 16 }}>
-      {/* Input de búsqueda */}
-      <TextInput
-        style={{
-          borderWidth: 1,
-          borderColor: searchQuery.length < 3 ? "red" : "gray",
-          padding: 8,
-          borderRadius: 4,
-          marginBottom: 16,
-        }}
-        placeholder="Buscar repositorios..."
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-      />
-      {searchQuery.length < 3 && <Text style={{ color: "red" }}>Debe ingresar al menos 3 caracteres</Text>}
-
-      {/* Resultados de búsqueda */}
-      {isLoading && <ActivityIndicator size="large" />}
-      {isError && <Text>Error al cargar los datos</Text>}
-
-      <FlatList
-        data={data}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => toggleSelectItem(item)}
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              padding: 8,
-              borderBottomWidth: 1,
-              borderColor: "#ddd",
-              backgroundColor: selectedItems.some((selected) => selected.id === item.id) ? "#e0f7fa" : "#fff",
-            }}
-          >
-            <View style={{ marginRight: 8 }}>
-              <Text style={{ fontWeight: "bold" }}>{item.name}</Text>
-              <Text>{item.owner.login}</Text>
-              <Text>{item.stargazers_count} ⭐</Text>
-              <Text
-                style={{ color: "blue" }}
-                onPress={() => Linking.openURL(item.html_url)}
-              >
-                Abrir en GitHub
-              </Text>
-            </View>
-          </TouchableOpacity>
-        )}
-      />
-
-      {/* Total de estrellas */}
-      {data && data.length > 0 && (
-        <Text style={{ fontWeight: "bold", marginVertical: 16 }}>
-          Total de estrellas: {totalStars}
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
+      <YStack padding="$4" space="$4" alignItems="center" backgroundColor="$backgroundDark">
+        {/* Header */}
+        <Text fontSize="$8" fontWeight="bold" color="$white">
+          Blog
         </Text>
-      )}
+        <Text fontSize="$5" color="$gray10">
+          Explora nuestras últimas publicaciones
+        </Text>
+      </YStack>
 
-      {/* Botones */}
-      <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 16 }}>
-        <Button title="Eliminar seleccionados" onPress={clearSelectedItems} disabled={selectedItems.length === 0} />
-        <Button
-          title="Ver seleccionados"
-          onPress={() => navigation.navigate("SelectedItemsScreen", { selectedItems })}
-          disabled={selectedItems.length === 0}
-        />
-      </View>
+      {/* Post List */}
+      <FlatList
+        data={posts}
+        renderItem={({ item }) => (
+          <View style={{ marginVertical: 10, alignItems: 'center' }}>
+            <PostItem post={item} />
+          </View>
+        )}
+        keyExtractor={(item) => item.id.toString()}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.5}
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={() => {
+              setPage(1);
+              setPosts([]);
+            }}
+          />
+        }
+        ListFooterComponent={renderFooter}
+        contentContainerStyle={{ paddingBottom: 20, paddingHorizontal: 16 }}
+      />
     </SafeAreaView>
   );
 };
 
-export default HomeScreen;
+export default BlogScreen;
+
+

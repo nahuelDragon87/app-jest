@@ -3,7 +3,7 @@ import { SearchRepositoriesResponse } from "../../interfaces";
 
 const getData = (query: string): Promise<SearchRepositoriesResponse['items']> => 
   axiosInstance
-    .get<SearchRepositoriesResponse>(`https://api.github.com/search/repositories?q=${query}&per_page=20`)
+    .get<SearchRepositoriesResponse>(`https://jsonplaceholder.typicode.com/posts`)
     .then((response) => response.data.items)
     .catch((error) => {
       console.error("Error fetching repositories:", error);

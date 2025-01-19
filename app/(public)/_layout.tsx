@@ -1,18 +1,20 @@
-import { BlazeText } from "@/components/BlazeText";
 import Colors from "@/constants/Colors";
 import { Stack } from "expo-router";
 import React from "react";
+import { Text } from "tamagui";
 
 export default function publicLayout() {
   return (
     <Stack
       screenOptions={{
         headerStyle: {
-          backgroundColor: Colors.text_secondary,
+          backgroundColor: Colors.text_primary,
         },
-        headerTintColor: "#fff",
+        
+        headerTintColor: "black",
+        headerShown: false ,
         headerTitle: (props) => (
-          <BlazeText
+          <Text
             {...props}
             color={props.tintColor}
             fontSize={18}
