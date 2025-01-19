@@ -28,14 +28,14 @@ const App = () => {
           name="Home"
           component={BlogScreen}
           options={{
-            tabBarLabel: 'Inicio', // Etiqueta personalizada
+            tabBarLabel: 'First tab', // Etiqueta personalizada
           }}
         />
         <Tab.Screen
           name="Second"
           component={PerformanceChallengeScreen}
           options={{
-            tabBarLabel: 'Segunda', // Etiqueta personalizada
+            tabBarLabel: 'Second tab', // Etiqueta personalizada
           }}
         />
       </Tab.Navigator>

@@ -1,39 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { FlatList, SafeAreaView, RefreshControl, ActivityIndicator } from 'react-native';
-import axios from 'axios';
 import PostItem from '../../components/PostItem';
 import { View, Text, YStack } from 'tamagui';
+import { useGetData } from '@/services/example/hooks';
 
 const BlogScreen = () => {
-  const [posts, setPosts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
 
-  useEffect(() => {
-    fetchPosts(page);
-  }, [page]);
-
-  const fetchPosts = async (page: number) => {
-    setLoading(true);
-    try {
-      const response = await axios.get(
-        `https://jsonplaceholder.typicode.com/posts?_page=${page}&_limit=10`
-      );
-      setPosts((prevPosts) => (page === 1 ? response.data : [...prevPosts, ...response.data]));
-    } catch (error) {
-      console.error('Error fetching posts:', error);
-    }
-    setLoading(false);
-  };
+  const { data: posts, isLoading, isFetching} = useGetData(page);
 
   const handleLoadMore = () => {
-    if (!loading) {
-      setPage(page + 1);
+    if (!isFetching) {
+      setPage((prevPage) => prevPage + 1);
     }
   };
 
+
   const renderFooter = () => {
-    return loading ? (
+    return isFetching ? (
       <ActivityIndicator size="large" color="#0000ff" style={{ marginVertical: 20 }} />
     ) : null;
   };
@@ -46,7 +30,7 @@ const BlogScreen = () => {
           Blog
         </Text>
         <Text fontSize="$5" color="$gray10">
-          Explora nuestras últimas publicaciones
+          Explor our news post
         </Text>
       </YStack>
 
@@ -63,10 +47,9 @@ const BlogScreen = () => {
         onEndReachedThreshold={0.5}
         refreshControl={
           <RefreshControl
-            refreshing={loading}
+            refreshing={isLoading}
             onRefresh={() => {
               setPage(1);
-              setPosts([]);
             }}
           />
         }
@@ -78,5 +61,6 @@ const BlogScreen = () => {
 };
 
 export default BlogScreen;
+
 
 

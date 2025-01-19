@@ -32,11 +32,11 @@ const PerformanceChallengeScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Challenge de Performance</Text>
-      <Text style={styles.subtitle}>Maneja una lista infinita con miles de elementos</Text>
+      <Text style={styles.subtitle}>Manage list </Text>
       
       <View style={styles.buttons}>
-        <Button title="Agregar más ítems" onPress={addMoreItems} />
-        <Button title="Mezclar ítems" onPress={shuffleItems} color="#FF5733" />
+        <Button title="Add more items" onPress={addMoreItems} />
+        <Button title="Mix items" onPress={shuffleItems} color="#FF5733" />
       </View>
 
       <FlatList

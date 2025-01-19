@@ -1,17 +1,18 @@
 import { axiosInstance } from "./../api";
-import { SearchRepositoriesResponse } from "../../interfaces";
+import { Repository, SearchRepositoriesResponse } from "../../interfaces";
 
-const getData = (query: string): Promise<SearchRepositoriesResponse['items']> => 
+// Ajusta el servicio para aceptar la paginación
+const getData = (page: number): Promise<Repository[]> =>
   axiosInstance
-    .get<SearchRepositoriesResponse>(`https://jsonplaceholder.typicode.com/posts`)
-    .then((response) => response.data.items)
+    .get(`https://jsonplaceholder.typicode.com/posts?_page=${page}&_limit=10`)
+    .then((response) => response.data)
     .catch((error) => {
-      console.error("Error fetching repositories:", error);
-      return []; // Devuelve un arreglo vacío en caso de error
+      console.error("Error fetching posts:", error);
+      return [];
     });
- // Retorna solo los repositorios
 
 export const exampleService = {
   getData,
 };
+
 
